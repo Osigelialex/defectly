@@ -1,24 +1,26 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom border-body">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold" href="#">Defectly</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Projects</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Teams</a>
-          </li>
-        </ul>
-        <form class="d-flex" action="{% url 'logout' %}">
-          <button class="btn btn-primary" type="submit">Logout</button>
-        </form>
-      </div>
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="#">
+      <h1 class="fs-2">Defectly</h1>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'projects' %}">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Teams</a>
+        </li>
+      </ul>
+      <form action="{% url 'logout' %}"> 
+        <button class="btn btn-dark">Logout</button>
+      </form>
     </div>
-  </nav>
+  </div>
+</nav>
