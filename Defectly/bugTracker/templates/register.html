@@ -5,6 +5,10 @@
 {% endblock %}
 
 {% block body %}
+<nav style="padding-top: 1.5rem; padding-bottom: 1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0;">
+  <p style="font-size: 1.25rem; font-weight: bold; text-decoration: none;">Defectly</p>
+</nav>
+
 <div style="width: 50%; margin: 0 auto; padding: 1.5rem; background-color: #f0f0f0; border-radius: 0.75rem;">
   <form class="w-75" action="{% url 'register' %}" method="POST">
     {% csrf_token %}
