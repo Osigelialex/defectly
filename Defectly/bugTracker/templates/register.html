@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+<div style="width: 50%; margin: 0 auto; padding: 1.5rem; background-color: #f0f0f0; border-radius: 0.75rem;">
   <form class="w-75" action="{% url 'register' %}" method="POST">
     {% csrf_token %}
     {% if message %}
@@ -33,13 +34,14 @@
       </div>
     </div>
     <div class="row mb-3">
-      <label class="col-sm-2 col-form-label">confirm Password</label>
+      <label class="col-sm-2 col-form-label">Confirm Password</label>
       <div class="col-sm-10">
         <input type="password" class="form-control" name="confirm" required>
       </div>
     </div>
     
     <button type="submit" class="btn btn-primary">Register</button>
-    <p>Already signed up? <a href="{% url 'login' %}">login Here</a></p>
+    <p>Already signed up? <a href="{% url 'login' %}">Login Here</a></p>
   </form>
+</div>
 {% endblock %}
