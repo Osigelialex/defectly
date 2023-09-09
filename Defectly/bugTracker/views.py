@@ -4,9 +4,10 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from .models import Project
 
-# Create your views here.
+
 def index(request):
     return HttpResponse("Hello")
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -54,14 +55,21 @@ def project_view(request):
         # save new project
         new_project.save()
         new_project.user.add(current_user)
-        
+
         # retrieve all projects
         projects = request.user.projects.all()
-        context = { "projects": projects, "message": "Created successfully" }
+        context = {"projects": projects, "message": "Created successfully"}
         return render(request, "projects.html", context)
+
     projects = request.user.projects.all()
-    context = { "projects": projects }
-    return render(request, 'projects.html', context) 
+    context = {"projects": projects}
+    return render(request, 'projects.html', context)
+
+
+def project_info_view(request, id):
+    project = Project.objects.get(pk=id)
+    context = {"project": project}
+    return render(request, "project_info.html", context)
 
 
 def logout_view(request):

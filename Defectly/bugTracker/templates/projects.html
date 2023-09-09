@@ -25,7 +25,7 @@
           <td>{{ project.name }}</td>
           <td>{{ project.description }}</td>
           <td>
-            <form method="POST">
+            <form method="POST" action="{% url 'project_info' project.id %}">
               {% csrf_token %}
             <button class="btn btn-dark">View</button>
             </form>
