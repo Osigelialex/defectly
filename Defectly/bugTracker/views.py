@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from .models import Project
 
 # Create your views here.
 def index(request):
@@ -42,6 +43,22 @@ def register(request):
 
 
 def project_view(request):
+    if request.method == 'POST':
+        project_name = request.POST['project_name']
+        description = request.POST['description']
+        current_user = request.user
+        new_project = Project(
+            name=project_name,
+            description=description,
+        )
+        # save new project
+        new_project.save()
+        new_project.user.add(current_user)
+        
+        # retrieve all projects
+        projects = request.user.projects.all()
+        context = { "projects": projects, "message": "Created successfully" }
+        return render(request, "projects.html", context)
     projects = request.user.projects.all()
     context = { "projects": projects }
     return render(request, 'projects.html', context) 
