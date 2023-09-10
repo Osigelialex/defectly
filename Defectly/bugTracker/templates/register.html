@@ -5,47 +5,46 @@
 {% endblock %}
 
 {% block body %}
-<nav style="padding-top: 1.5rem; padding-bottom: 1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0;">
-  <p style="font-size: 1.25rem; font-weight: bold; text-decoration: none;">Defectly</p>
-</nav>
-
-<div style="width: 50%; margin: 0 auto; padding: 1.5rem; background-color: #f0f0f0; border-radius: 0.75rem;">
-  <form class="w-75" action="{% url 'register' %}" method="POST">
-    {% csrf_token %}
-    {% if message %}
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>{{ message }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endif %}
-    <h2>Sign Up</h2>
-    <div class="row mb-3">
-      <label class="col-sm-2 col-form-label">Email</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" name="email" required>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-dark text-white">
+          <h3>Register an account</h3>
+        </div>
+        <div class="card-body">
+          <form action="{% url 'register' %}" method="POST">
+            {% csrf_token %}
+            {% if message %}
+            <div class="row alert alert-warning alert-dismissible fade show" role="alert">
+              <div class="col-sm-10">
+                {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            </div>
+            {% endif %}
+            <div class="form-group mb-4">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="username" placeholder="Enter username" name="username">
+            </div>
+            <div class="form-group mb-4">
+              <label for="email">Email</label>
+              <input type="text" class="form-control" id="email" placeholder="Enter Email" name="email">
+            </div>
+            <div class="form-group mb-4">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+            </div>
+            <div class="form-group mb-4">
+              <label for="confirm">Password</label>
+              <input type="password" class="form-control" id="confirm" placeholder="Confirm password" name="confirm">
+            </div>
+            <button type="submit" class="btn btn-dark btn-block mb-4">Login</button>
+            <p>Already signed up? <a href="{% url 'login' %}">Login here</a></p>
+          </form>
+        </div>
       </div>
     </div>
-    <div class="row mb-3">
-      <label class="col-sm-2 col-form-label">Username</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" name="username" required>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <label class="col-sm-2 col-form-label">Password</label>
-      <div class="col-sm-10">
-        <input type="password" class="form-control" name="password" required>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <label class="col-sm-2 col-form-label">Confirm Password</label>
-      <div class="col-sm-10">
-        <input type="password" class="form-control" name="confirm" required>
-      </div>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Register</button>
-    <p>Already signed up? <a href="{% url 'login' %}">Login Here</a></p>
-  </form>
+  </div>
 </div>
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Project
 
@@ -23,6 +24,7 @@ def login_view(request):
     return render(request, "login.html")
 
 
+@login_required(login_url='login')
 def dashboard(request):
     return render(request, "dashboard.html")
 
@@ -33,16 +35,24 @@ def register(request):
         email = request.POST['email']
         password = request.POST['password']
         confirm = request.POST['confirm']
+        
+        # check for duplicate email
+        if User.objects.filter(email=email).exists():
+            context = {"message": "Account with email already exists"}
+            return render(request, 'register.html', context)
+        
         if password != confirm:
             context = {"message": "Passwords must match"}
             return render(request, "register.html", context)
-        else:
-            user = User(username=username, password=password, email=email)
-            user.save()
-            return redirect('dashboard')
+        
+        user = User.objects.create_user(username=username, email=email, password=password)
+        login(request, user)
+        return redirect('dashboard')
+
     return render(request, 'register.html')
 
 
+@login_required(login_url='login')
 def project_view(request):
     if request.method == 'POST':
         project_name = request.POST['project_name']
@@ -66,6 +76,7 @@ def project_view(request):
     return render(request, 'projects.html', context)
 
 
+@login_required(login_url='login')
 def project_info_view(request, id):
     project = Project.objects.get(pk=id)
     context = {"project": project}
