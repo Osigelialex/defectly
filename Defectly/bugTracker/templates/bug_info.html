@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    {% include 'navbar.html' %}
+    <div class="container">
+        <h1>{{ bug.title }}</h1>
+        <p>Created by: {{ bug.created_by }}</p>
+        <p>Created on: {{ bug.created_at }}</p>
+        <p>Status: {{ bug.open }}</p>
+        <p>Severity: {{ bug.severity }}</p>
+
+        <p>Assigned members</p>
+        {% for member in bug.assignees.all %}
+            <p>{{ member }}</p>
+        {% endfor %}
+
+        <form action="{% url 'bugInfo' bug.id %}" method="POST">
+            {% csrf_token %}
+            {{ commentForm }}
+            <button type="submit" class="btn btn-dark mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
+                </svg>
+            </button>
+            
+        </form>
+
+        <h4>Comments</h4>
+        {% for comment in comments %}
+            <div class="container bg-secondary mb-4 p-3">
+                <p>{{ comment.timestamp }}</p>
+                <p><strong>{{ comment.author }}</strong>: {{ comment.comment }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

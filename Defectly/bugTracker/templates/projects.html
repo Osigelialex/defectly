@@ -1,9 +1,16 @@
 {% extends 'layout.html' %}
 
+{% block title %}
+  projects
+{% endblock %}
+
 {% block body %}
   {% include 'navbar.html' %}
   <div class="container">
-    <h3 class="text-center mb-4">Check out your projects</h3>
+  {% if projects|length == 0 %}
+    <h3 class="text-center">Not assigned to any projects :(</h3>
+  {% else %}
+  <h3 class="text-center mb-4">Check out your projects</h3>
     {% if message %}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
       <strong>{{ message }}</strong>
@@ -11,65 +18,69 @@
     </div>
     {% endif %}
   <section class="mx-auto">
-  <table class="table table-striped mb-4">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Description</th>
-        <th scop="col">Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for project in projects %}
+    <table class="table table-striped mb-4">
+      <thead class="table-dark">
         <tr>
-          <td>{{ project.name }}</td>
-          <td>{{ project.description }}</td>
-          <td>
-            <form method="POST" action="{% url 'project_info' project.id %}">
-              {% csrf_token %}
-            <button class="btn btn-dark">View</button>
-            </form>
-          </td>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scop="col">Details</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </section>
-  <div class="text-center mx-auto">
-    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Create a new project
-    </button>
-  </div>
-  <!--pop up form-->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Create a new project</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form action="{% url 'projects' %}" method="POST">
-            {% csrf_token %}
-            <h4 class="text-center">Fill in details</h4>
-            <div class="form-floating mb-3">
-              <input class="form-control" name="project_name" placeholder="Enter name of project" id="floatingTextarea">
-              <label for="floatingTextarea">Project name</label>
-            </div>
-            <div class="form-floating mb-3">
-              <textarea class="form-control" name="description" placeholder="Enter description of project" id="floatingTextarea"></textarea>
-              <label for="floatingTextarea">Description</label>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <input type="submit" value="Create project" class="btn btn-dark">
-            </div>
-          </form>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+          <tr>
+            <td>{{ project.name }}</td>
+            <td>{{ project.description }}</td>
+            <td>
+              <form method="POST" action="{% url 'project_info' project.id %}">
+                {% csrf_token %}
+              <button class="btn btn-dark">View</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </section>
+    {% if request.user.is_staff %}
+    <div class="text-center mx-auto">
+      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create a new project
+      </button>
+    </div>
+    <!--pop up form-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create a new project</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="{% url 'projects' %}" method="POST">
+              {% csrf_token %}
+              <h4 class="text-center">Fill in details</h4>
+              <div class="form-floating mb-3">
+                <input class="form-control" name="project_name" placeholder="Enter name of project" id="floatingTextarea">
+                <label for="floatingTextarea">Project name</label>
+              </div>
+              <div class="form-floating mb-3">
+                <textarea class="form-control" name="description" placeholder="Enter description of project" id="floatingTextarea"></textarea>
+                <label for="floatingTextarea">Description</label>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Create project" class="btn btn-dark">
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  </div>
+    {% endif %}
+    </div>
+  {% endif %}
+  
 {% endblock %}

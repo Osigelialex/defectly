@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Project
+from .models import Project, Bugs, Comments
+from .forms import BugCreationForm, CommentCreationForm
 
 
 def index(request):
@@ -79,9 +80,46 @@ def project_view(request):
 @login_required(login_url='login')
 def project_info_view(request, id):
     project = Project.objects.get(pk=id)
-    context = {"project": project}
+    bugForm = BugCreationForm()
+    bugs = project.bugs.all()
+    context = {"project": project, "bugs": bugs, "bugForm": bugForm}
+
+    if request.method == 'POST':
+        form = BugCreationForm(request.POST)
+        if form.is_valid():
+            form.save(commit=False)
+            form.instance.project = project
+            form.instance.created_by = request.user
+            form.save()
+            return render(request, "project_info.html", context)
+
     return render(request, "project_info.html", context)
 
+
+@login_required(login_url='login')
+def comments_view(request):
+    pass
+        
+
+
+@login_required(login_url='login')
+def bug_info(request, id):
+    commentForm = CommentCreationForm()
+    bug = Bugs.objects.get(pk=id)
+    comments = Comments.objects.all()
+    context = {"commentForm": commentForm, "bug": bug, "comments": comments}
+
+    if request.method == 'POST':
+        form = CommentCreationForm(request.POST)
+        if form.is_valid():
+            form.save(commit=False)
+            form.instance.author = request.user
+            form.instance.bug = bug
+            form.save()
+            return render(request, 'bug_info.html', context)
+    
+    return render(request, 'bug_info.html', context)
+        
 
 def logout_view(request):
     logout(request)
