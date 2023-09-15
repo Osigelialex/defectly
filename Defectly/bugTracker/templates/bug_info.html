@@ -1,36 +1,116 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-    {% include 'navbar.html' %}
-    <div class="container">
-        <h1>{{ bug.title }}</h1>
-        <p>Created by: {{ bug.created_by }}</p>
-        <p>Created on: {{ bug.created_at }}</p>
-        <p>Status: {{ bug.open }}</p>
-        <p>Severity: {{ bug.severity }}</p>
-
-        <p>Assigned members</p>
-        {% for member in bug.assignees.all %}
-            <p>{{ member }}</p>
-        {% endfor %}
-
-        <form action="{% url 'bugInfo' bug.id %}" method="POST">
-            {% csrf_token %}
-            {{ commentForm }}
-            <button type="submit" class="btn btn-dark mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                    <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                </svg>
-            </button>
-            
-        </form>
-
-        <h4>Comments</h4>
-        {% for comment in comments %}
-            <div class="container bg-secondary mb-4 p-3">
-                <p>{{ comment.timestamp }}</p>
-                <p><strong>{{ comment.author }}</strong>: {{ comment.comment }}</p>
-            </div>
-        {% endfor %}
+  {% include 'navbar.html' %}
+  <div class="container w-75">
+    <!--bug overview-->
+    <div class="card text-center">
+      <div class="card-header">
+        <h5>Bug Report</h5>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ bug.title }}</h5>
+        <p class="card-text">{{ bug.description }}</p>
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Modal">Close Bug 🎉</button>
+      </div>
+      <div class="card-footer text-body-secondary">
+        <h5>Reported by {{ bug.created_by }}</h5>
+        <small>Reported {{ bug.created_at|timesince }} ago</small>
+      </div>
     </div>
+
+    <!--pop up form-->
+    <div class="modal fade text-dark" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">You are about to close a Bug Report</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              {% csrf_token %}
+              <p class="text-center mb-4">How was the bug fixed?</p>
+
+              <div class="form-floating mb-3">
+                {{ closeBugForm.bug_fix }}
+                <label for="floatingTextarea">Fix</label>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Submit" class="btn btn-dark">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--Comments section-->
+    <div class="container mt-4 rounded">
+      <span class="position-relative fw-bold">
+        COMMENTS
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          {{ comments|length }}
+          <span class="visually-hidden">unread messages</span>
+        </span>
+      </span>
+
+      <!--No comment yet section-->
+      {% if comments|length == 0 %}
+      <h4 class="text-center"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-wind" viewBox="0 0 16 16">
+        <path d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"/>
+      </svg></h4>
+      <h5 class="text-center fw-light">Be first to leave a comment</h5>
+      <form action="{% url 'bugInfo' bug.id %}" method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3 mx-auto">
+          {{ commentForm.comment }}
+          <button type="submit" class="btn btn-dark">Post</button>
+        </div>
+      </form>
+
+      <!--Comments found section-->
+      {% else %}
+      <div class="container bg-secondary rounded pt-3 pb-1 mt-3">
+        {% for comment in comments %}
+        <div class="container bg-dark text-white rounded mb-4 p-3">
+          <div class="row">
+            <div class="col-sm">
+              <p>{{ comment.timestamp|timesince }} ago</p>
+              <p><strong>{{ comment.author }}</strong>: {{ comment.comment }}</p>
+            </div>
+            <!--delete comment form-->
+            {% if user == comment.author %}
+            <form class="col-sm d-flex justify-content-end" action="{% url 'bugInfo' bug.id %}" method="POST">
+              {% csrf_token %}
+              <!--hidden info attached to form-->
+              <input type="hidden" name="delete_post" value="{{ comment.id }}">
+              <input type="hidden" name="bug_id" value="{{ bug.id }}">
+
+              <button class="btn" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+              </svg></button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+      <!--New comment form-->
+      <form action="{% url 'bugInfo' bug.id %}" method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3 mx-auto">
+          {{ commentForm.comment }}
+          <button type="submit" class="btn btn-dark">Post</button>
+        </div>
+      </form>
+
+    </div>
+      {% endif %}
+    </div>  
+  </div>
 {% endblock %}

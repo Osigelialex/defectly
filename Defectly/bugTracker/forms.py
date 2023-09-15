@@ -1,5 +1,5 @@
 from django import forms
-from .models import Bugs, Comments
+from .models import Bugs, Comments, Project
 
 
 class BugCreationForm(forms.ModelForm):
@@ -16,8 +16,30 @@ class BugCreationForm(forms.ModelForm):
 
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter title of bug', 'id': 'floatingTextarea', 'class': 'form-control', 'required': True}),
-            'description': forms.Textarea(attrs={'placeholder': 'Enter description of bug', 'id': 'floatingTextarea', 'class': 'form-control', 'style': 'height: 100px;', 'required': True})
+            'description': forms.Textarea(attrs={'placeholder': 'Enter description of bug', 'id': 'floatingTextarea', 'class': 'form-control mb-4', 'style': 'height: 100px;', 'required': True})
         }
+
+
+class CloseBugForm(forms.ModelForm):
+    class Meta:
+        model = Bugs
+        fields = ['bug_fix']
+
+        widgets = {
+            'bug_fix': forms.Textarea(attrs={'placeholder': 'Enter bug fix', 'id': 'floatingTextarea', 'class': 'form-control mb-4', 'style': 'height: 100px', 'required': True})
+        }
+
+
+class ProjectCreationForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'description', 'user']
+        
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Enter project name', 'id': 'floatingTextarea', 'class': 'form-control', 'required': True}),
+            'description': forms.Textarea(attrs={'placeholder': 'Enter description of project', 'id': 'floatingTextarea', 'class': 'form-control mb-4', 'style': 'height: 100px;', 'required': True}),
+        }
+
 
 class CommentCreationForm(forms.ModelForm):
     class Meta:

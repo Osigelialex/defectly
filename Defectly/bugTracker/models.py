@@ -36,7 +36,8 @@ class Bugs(models.Model):
     assignees = models.ManyToManyField(User, related_name='assigned')
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='bugs')
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bugs')
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    bug_fix = models.TextField(null=True)
     
     def __str__(self) -> str:
         return f"{self.title}"
@@ -45,8 +46,7 @@ class Bugs(models.Model):
 class Comments(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment')
     comment = models.CharField(max_length=100)
-    created_at = models.DateField(auto_now_add=True)
-    timestamp = models.DateTimeField(default=timezone.now)
+    timestamp = models.DateTimeField(auto_now_add=True)
     bug = models.ForeignKey(Bugs, on_delete=models.CASCADE, related_name="comments")
     
     def __str__(self) -> str:

@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.urls import reverse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Project, Bugs, Comments
-from .forms import BugCreationForm, CommentCreationForm
+from .forms import BugCreationForm, CommentCreationForm, ProjectCreationForm, CloseBugForm
 
 
 def index(request):
@@ -27,7 +28,14 @@ def login_view(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, "dashboard.html")
+    projects_count = Project.objects.filter(user=request.user).count()
+    bugs_count = Bugs.objects.filter(assignees=request.user).count()
+    context = {
+        "projects_count": projects_count,
+        "bugs_count": bugs_count
+    }
+
+    return render(request, "dashboard.html", context)
 
 
 def register(request):
@@ -55,25 +63,19 @@ def register(request):
 
 @login_required(login_url='login')
 def project_view(request):
+    project_form = ProjectCreationForm()
+
     if request.method == 'POST':
-        project_name = request.POST['project_name']
-        description = request.POST['description']
-        current_user = request.user
-        new_project = Project(
-            name=project_name,
-            description=description,
-        )
-        # save new project
-        new_project.save()
-        new_project.user.add(current_user)
+        form = ProjectCreationForm(request.POST)
+        form.save()
 
         # retrieve all projects
         projects = request.user.projects.all()
         context = {"projects": projects, "message": "Created successfully"}
         return render(request, "projects.html", context)
 
-    projects = request.user.projects.all()
-    context = {"projects": projects}
+    projects = Project.objects.filter(user=request.user)
+    context = {"projects": projects, "project_form": project_form}
     return render(request, 'projects.html', context)
 
 
@@ -97,19 +99,27 @@ def project_info_view(request, id):
 
 
 @login_required(login_url='login')
-def comments_view(request):
-    pass
-        
-
-
-@login_required(login_url='login')
 def bug_info(request, id):
     commentForm = CommentCreationForm()
+    closeBugForm = CloseBugForm()
     bug = Bugs.objects.get(pk=id)
-    comments = Comments.objects.all()
-    context = {"commentForm": commentForm, "bug": bug, "comments": comments}
+    comments = bug.comments.all()
+    context = {
+        "commentForm": commentForm, 
+        "closeBugForm": closeBugForm, 
+        "bug": bug, 
+        "comments": comments
+    }
 
     if request.method == 'POST':
+        # check if the user wants to delete comment
+        if request.POST.get('delete_post'):
+            comment_id_to_delete = request.POST.get('delete_post')
+            comment_to_delete = Comments.objects.get(pk=comment_id_to_delete)
+            comment_to_delete.delete()
+            return render(request, 'bug_info.html', context)
+
+        # create new comment
         form = CommentCreationForm(request.POST)
         if form.is_valid():
             form.save(commit=False)
@@ -117,7 +127,7 @@ def bug_info(request, id):
             form.instance.bug = bug
             form.save()
             return render(request, 'bug_info.html', context)
-    
+
     return render(request, 'bug_info.html', context)
         
 
