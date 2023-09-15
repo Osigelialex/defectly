@@ -56,7 +56,7 @@ def register(request):
         
         user = User.objects.create_user(username=username, email=email, password=password)
         login(request, user)
-        return redirect('dashboard')
+        return redirect('login')
 
     return render(request, 'register.html')
 
