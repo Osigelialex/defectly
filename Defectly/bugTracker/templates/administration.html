@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  {% include 'navbar.html' %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <div class="table-responsive">
+          <h3 class="text-center mb-4">View team member details</h3>
+          <table class="table table-stripped text-center">
+            <thead class="table-dark">
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for usr in users %}
+                <tr>
+                  <td>{{ usr.username }}</td>
+                  <td>{{ usr.email }}</td>
+                  <td>
+                    <form action="{% url 'administration' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" name="user_id" value="{{ usr.id }}">
+                      <input type="submit" value="Select" class="btn btn-dark"> 
+                    </form>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% if selected_user %}
+      <div class="col-sm">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            <h4 class="text-center">Overview for {{ selected_user|title }}</h4>
+          </div>
+          <div class="card-body">
+            <div class="card-text">
+              <div class="container bg-light mb-4 p-3 d-flex justify-content-between">
+                <div class="left">
+                  <h5>Assigned Projects</h5>
+                </div>
+                <div class="right">
+                  <h5>{{ projects }}</h5>
+                </div>
+              </div>
+              <div class="container bg-light mb-4 p-3 d-flex justify-content-between">
+                <div class="left">
+                  <h5>Assigned Bugs</h5>
+                </div>
+                <div class="right">
+                  <h5>{{ bugs }}</h5>
+                </div>
+              </div>
+              <div class="container bg-light rounded mb-4 p-3 d-flex justify-content-between">
+                <div class="left">
+                  <h5>Bug Fixes</h5>
+                </div>
+                <div class="right">
+                  <h5>{{ resolves }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            {% if is_admin == False %}
+            <button class="btn btn-danger">Make admin</button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

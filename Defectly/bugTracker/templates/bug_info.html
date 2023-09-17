@@ -4,6 +4,22 @@
   {% include 'navbar.html' %}
   <div class="container w-75">
     <!--bug overview-->
+    {% if bug.open == False %}
+    <div class="card text-center">
+      <div class="card-header">
+        <h5>Bug has been Closed by {{ bug.resolved_by|title }}</h5>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ bug.title }}</h5>
+        <p class="card-text">{{ bug.description }}</p>
+      </div>
+      <div class="card-footer text-body-secondary">
+        <h5>Reported by {{ bug.created_by|title }}</h5>
+        <small>Reported {{ bug.created_at|timesince }} ago</small>
+      </div>
+    </div>
+    {% endif %}
+    {% if bug.open == True %}
     <div class="card text-center">
       <div class="card-header">
         <h5>Bug Report</h5>
@@ -11,7 +27,7 @@
       <div class="card-body">
         <h5 class="card-title">{{ bug.title }}</h5>
         <p class="card-text">{{ bug.description }}</p>
-        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Modal">Close Bug 🎉</button>
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#Modal">Close Bug report</button>
       </div>
       <div class="card-footer text-body-secondary">
         <h5>Reported by {{ bug.created_by }}</h5>
@@ -24,24 +40,18 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">You are about to close a Bug Report</h5>
             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form action="{% url 'bugInfo' bug.id %}" method="POST">
               {% csrf_token %}
-              <p class="text-center mb-4">How was the bug fixed?</p>
-
-              <div class="form-floating mb-3">
-                {{ closeBugForm.bug_fix }}
-                <label for="floatingTextarea">Fix</label>
-              </div>
-
+              <h5>You confirm that the bug has been fixed?</h5>
+              <input type="hidden" name="bug_status_change" value="{{ bug.id }}">
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <input type="submit" value="Submit" class="btn btn-dark">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+                <input type="submit" value="Confirm" class="btn btn-danger">
               </div>
             </form>
           </div>
@@ -64,7 +74,7 @@
       <h4 class="text-center"><svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-wind" viewBox="0 0 16 16">
         <path d="M12.5 2A2.5 2.5 0 0 0 10 4.5a.5.5 0 0 1-1 0A3.5 3.5 0 1 1 12.5 8H.5a.5.5 0 0 1 0-1h12a2.5 2.5 0 0 0 0-5zm-7 1a1 1 0 0 0-1 1 .5.5 0 0 1-1 0 2 2 0 1 1 2 2h-5a.5.5 0 0 1 0-1h5a1 1 0 0 0 0-2zM0 9.5A.5.5 0 0 1 .5 9h10.042a3 3 0 1 1-3 3 .5.5 0 0 1 1 0 2 2 0 1 0 2-2H.5a.5.5 0 0 1-.5-.5z"/>
       </svg></h4>
-      <h5 class="text-center fw-light">Be first to leave a comment</h5>
+      <h5 class="text-center fw-light">Leave a comment or todos if you're alone</h5>
       <form action="{% url 'bugInfo' bug.id %}" method="POST">
         {% csrf_token %}
         <div class="input-group mb-3 mx-auto">
@@ -113,4 +123,5 @@
       {% endif %}
     </div>  
   </div>
+  {% endif %}
 {% endblock %}
