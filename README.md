@@ -36,7 +36,6 @@ Step-by-step instructions for installing and setting up the project.
 ```bash
 git clone https://github.com/Osigelialex/Defectly.git
 cd Defectly
-cd Defectly
 pip install -r requirements.txt
 ```
 
