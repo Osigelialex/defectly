@@ -48,6 +48,6 @@ Access the application in your web browser at http://localhost:8000
 
 ### Admin priviledges
 ```bash
-python manage.py createsuper
+python manage.py createsuperuser
 ```
 login in with created admin account to get admin priviledges
