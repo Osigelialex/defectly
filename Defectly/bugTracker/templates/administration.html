@@ -3,6 +3,9 @@
 {% block body %}
   {% include 'navbar.html' %}
   <div class="container">
+    {% if users|length == 0%}
+      <h1 class="fw-bold text-center">No Team Members Found</h1>
+    {% else %}
     <div class="row">
       <div class="col-sm">
         <div class="table-responsive">
@@ -76,5 +79,6 @@
       </div>
       {% endif %}
     </div>
+  {% endif %}
   </div>
 {% endblock %}
