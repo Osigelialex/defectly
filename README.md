@@ -41,6 +41,7 @@ pip install -r requirements.txt
 
 ### Usage
 ```bash
+python manage.py migrate
 python manage.py runserver
 ```
 Access the application in your web browser at http://localhost:8000
