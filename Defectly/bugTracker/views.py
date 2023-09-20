@@ -105,7 +105,7 @@ def project_info_view(request, id):
     if request.method == 'POST':
         # check if user wants to add a new dev
         if request.POST.get('new_devs'):
-            new_devs = request.POST.get('new_devs')
+            new_devs = request.POST.getlist('new_devs')
             project.user.add(*new_devs)
             return redirect(project_info_view, project.id)
         
