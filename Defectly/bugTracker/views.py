@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from .models import Project, Bugs, Comments
 from .forms import BugCreationForm, CommentCreationForm, ProjectCreationForm
 
@@ -57,10 +57,6 @@ def register(request):
             email=email,
             password=password
         )
-
-        # add user to the developers group
-        dev_group = Group.objects.get(name='Developer')
-        user.groups.add(dev_group)
 
         login(request, user)
         return redirect('login')
