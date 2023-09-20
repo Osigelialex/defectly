@@ -42,6 +42,8 @@
           <div class="card-header bg-dark text-white">
             <h4 class="text-center">Overview for {{ selected_user|title }}</h4>
           </div>
+
+          <!--Overview-->
           <div class="card-body">
             <div class="card-text">
               <div class="container bg-light mb-4 p-3 d-flex justify-content-between">
@@ -69,11 +71,6 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="card-footer text-center">
-            {% if is_admin == False %}
-            <button class="btn btn-danger">Make admin</button>
-            {% endif %}
           </div>
         </div>
       </div>

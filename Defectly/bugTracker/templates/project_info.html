@@ -7,8 +7,7 @@
 {% block body %}
   {% include 'navbar.html' %}
   <div class="container text-center">
-    <h2 class="mb-3">{{ project.name }}</h2>
-    <h5 class="mb-4 fw-light">{{ project.description }}</h5>
+    <h2 class="mb-3 display-4 fw-bold">{{ project.name }}</h2>
 
     <!--Display if not bugs are found-->
     {% if bugs|length == 0 %}
@@ -16,6 +15,7 @@
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
         <path d="M12.331 9.5a1 1 0 0 1 0 1A4.998 4.998 0 0 1 8 13a4.998 4.998 0 0 1-4.33-2.5A1 1 0 0 1 4.535 9h6.93a1 1 0 0 1 .866.5zM7 6.5c0 .828-.448 0-1 0s-1 .828-1 0S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 0-1 0s-1 .828-1 0S9.448 5 10 5s1 .672 1 1.5z"/>
       </svg></h3>
+
       <h4 class="fw-light text-center mb-4">No bugs Found</h4>
       <div class="text-center mx-auto">
         <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -24,11 +24,11 @@
       </div>
     {% else %}
   
-    <div class="container text-center mb-4 text-dark">
-        <!--bugs list section-->
-        <h3 class="text-center mb-4 text-white">Pending Bugs</h3>
-        <div class="table-responsive">
-        <table class="table table-striped">
+    <div class="text-center mb-4 text-dark">
+      <!--bugs list section-->
+      <div class="table-responsive mb-4">
+        <h3 class="text-white mb-4">Reported Bugs</h3>
+        <table class="table table-striped table-hover">
           <thead class="table-dark">
             <tr>
               <th scope="col">Title</th>
@@ -40,29 +40,78 @@
           <tbody>
           {% for bug in bugs %}
             <tr>
-              <td>{{ bug.title }}</td>
-              <td>{{ bug.description }}</td>
-              <td>{{ bug.severity }}</td>
+              <td class="fw-bold">{{ bug.title }}</td>
+              <td class="fw-bold">{{ bug.description }}</td>
+              <td class="fw-bold">{{ bug.severity|title }}</td>
               <td>
+                {% if user in bug.assignees.all %}
                 <form action="{% url 'bugInfo' bug.id %}">
                   <input type="submit" class="btn btn-dark" value="view">
                 </form>
+                {% else %}
+                  <input type="disabled" class="btn btn-secondary" value="unassigned">
+                {% endif %}
               </td>
             </tr>
           {% endfor %}
           </tbody>
         </table>
-        </div>
         <div class="container text-center mx-auto">
-          <button type="button" class="btn btn-dark mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <button type="button" class="btn btn-dark mb-3 fw-bold" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Report a new bug
           </button>
         </div>
       </div>
-      </div>
-    </div>
+      <!--Team list-->
+      <ul class="list-group w-50 mx-auto">
+        <li class="list-group-item d-flex justify-content-between">
+          <h5 class="text-center">Team Members</h5>
+          {% if unassigned_devs|length > 0 and user.is_staff %}
+          <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal1">Add Dev</button>
+          {% endif %}
+        </li>
+        {% for member in assigned_members.all %}
+          <li class="list-group-item fw-bold">{{ member|title }}</li>
+        {% endfor %}
+      </ul>
+     </div>
     </div>
     {% endif %}
+
+    <!--add Dev form-->
+    <div class="modal fade text-dark" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel1">Add Developers</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <form action="{% url 'project_info' project.id %}" method="POST">
+              {% csrf_token %}
+              <h4 class="text-center">Add Devs to the project</h4>
+
+              <div class="mb-3">
+                <select multiple class="form-select" name="new_devs">
+                  {% for dev in unassigned_devs %}
+                    <option value="{{ dev.id }}">{{ dev.username|title }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Add" class="btn btn-dark">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <!--new bug form-->
     <div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

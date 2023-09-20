@@ -94,6 +94,7 @@ def bugs_view(request):
 def project_info_view(request, id):
     project = Project.objects.get(pk=id)
     bugForm = BugCreationForm()
+    unassigned_devs = User.objects.exclude(projects=project)
     bugs = project.bugs.filter(open=True)
     assigned_members = project.user
 
@@ -101,10 +102,18 @@ def project_info_view(request, id):
         "project": project,
         "bugs": bugs,
         "bugForm": bugForm,
+        "unassigned_devs": unassigned_devs,
         "assigned_members": assigned_members
     }
 
     if request.method == 'POST':
+        # check if user wants to add a new dev
+        if request.POST.get('new_devs'):
+            new_devs = request.POST.get('new_devs')
+            project.user.add(*new_devs)
+            return redirect(project_info_view, project.id)
+        
+        # create new bug ticket for user
         form = BugCreationForm(request.POST)
         if form.is_valid():
             bug_instance = form.save(commit=False)
@@ -170,10 +179,8 @@ def administration(request):
         bugs = Bugs.objects.filter(assignees=user, open=True).count()
         projects = Project.objects.filter(user=user).count()
         resolves = Bugs.objects.filter(resolved_by=user).count()
-
-        # check if user is an admin
-        admin_group = Group.objects.get(name='Admins')
-        is_admin = admin_group in user.groups.all()
+        
+        is_admin = user.is_staff
 
         return render(request, 'administration.html', {
             "bugs": bugs,
