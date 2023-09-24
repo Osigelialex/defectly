@@ -91,6 +91,9 @@ class TestTracker(TestCase):
 
         self.assertEqual(p1.user.count(), 1)
         self.assertEqual(p2.user.count(), 2)
+        
+        p1.user.add(u2)
+        self.assertIn(u2, p1.user.all())
 
         self.assertIn(u1, p1.user.all())
         self.assertIn(u1, p2.user.all())

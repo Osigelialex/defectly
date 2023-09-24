@@ -108,7 +108,7 @@ def project_info_view(request, id):
             new_devs = request.POST.getlist('new_devs')
             project.user.add(*new_devs)
             return redirect(project_info_view, project.id)
-        
+
         # create new bug ticket for user
         form = BugCreationForm(request.POST)
         if form.is_valid():
