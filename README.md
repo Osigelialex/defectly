@@ -50,4 +50,4 @@ Access the application in your web browser at http://localhost:8000
 ```bash
 python manage.py createsuperuser
 ```
-login in with created admin account to get admin priviledges
+login in with created admin account to get admin features
