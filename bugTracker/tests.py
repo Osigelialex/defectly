@@ -131,3 +131,23 @@ class TestTracker(TestCase):
         client.login(username='john', password='password')
         response = client.get('/bugTracker/dashboard/')
         self.assertEqual(response.status_code, 200)
+        
+    def test_bugs_page(self):
+        """Tests if bugs page is functional"""
+        client = Client()
+        response = client.get('/bugTracker/bugs/')
+        self.assertEqual(response.status_code, 302)
+        
+        client.login(username='john', password='password')
+        response = client.get('/bugTracker/bugs/')
+        self.assertEqual(response.status_code, 200)
+        
+    def test_projects_page(self):
+        """Tests if projects page is functional"""
+        client = Client()
+        response = client.get('/bugTracker/projects/')
+        self.assertEqual(response.status_code, 302)
+        
+        client.login(username='john', password='password')
+        response = client.get('/bugTracker/projects/')
+        self.assertEqual(response.status_code, 200)

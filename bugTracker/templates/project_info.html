@@ -7,7 +7,7 @@
 {% block body %}
   {% include 'navbar.html' %}
   <div class="container text-center">
-    <h2 class="mb-3 display-4 fw-bold">{{ project.name }}</h2>
+    <h2 class="mb-3 fw-bold">{{ project.name }}</h2>
 
     <!--Display if not bugs are found-->
     {% if bugs|length == 0 %}
