@@ -1,0 +1,153 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  projects
+{% endblock %}
+
+{% block body %}
+  {% include 'navbar.html' %}
+  <div class="container">
+  {% if projects|length == 0 %}
+    <div class="container text-center">
+      <h1><svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-emoji-sunglasses" viewBox="0 0 16 16">
+        <path d="M4.968 9.75a.5.5 0 1 0-.866.5A4.498 4.498 0 0 0 8 12.5a4.5 4.5 0 0 0 3.898-2.25.5.5 0 1 0-.866-.5A3.498 3.498 0 0 1 8 11.5a3.498 3.498 0 0 1-3.032-1.75zM7 5.116V5a1 1 0 0 0-1-1H3.28a1 1 0 0 0-.97 1.243l.311 1.242A2 2 0 0 0 4.561 8H5a2 2 0 0 0 1.994-1.839A2.99 2.99 0 0 1 8 6c.393 0 .74.064 1.006.161A2 2 0 0 0 11 8h.438a2 2 0 0 0 1.94-1.515l.311-1.242A1 1 0 0 0 12.72 4H10a1 1 0 0 0-1 1v.116A4.22 4.22 0 0 0 8 5c-.35 0-.69.04-1 .116z"/>
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-1 0A7 7 0 1 0 1 8a7 7 0 0 0 14 0z"/>
+      </svg></h1>
+      <h3 class="text-center mb-4 fw-bold">No projects for now</h3>
+      {% if request.user.is_staff %}
+    <div class="text-center mx-auto">
+      <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create a new project
+      </button>
+    </div>
+    <!--pop up form-->
+    <div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create a new project</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="{% url 'projects' %}" method="POST">
+              {% csrf_token %}
+              <h4 class="text-center">Create New Project</h4>
+
+              <div class="form-floating mb-3">
+                {{ project_form.name }}
+                <label for="floatingTextarea">Name</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                {{ project_form.description }}
+                <label for="floatingTextarea">Description</label>
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleSelect" class="form-label">Add Team members to project</label>
+                <br>
+                {{ project_form.user }}
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Create project" class="btn btn-dark">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endif %}
+    </div>
+  {% else %}
+  <h3 class="text-center mb-4 fw-bold">Check out your projects</h3>
+    {% if message %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endif %}
+  <section class="mx-auto text-dark">
+    <table class="table table-striped mb-4">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th scop="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+          <tr>
+            <td class="fw-bold">{{ project.name }}</td>
+            <td class="fw-bold">{{ project.description }}</td>
+            <td>
+              {% if user not in project.user.all %}
+                <button class="btn btn-dark" disabled>Not assigned</button>
+              {% else %}
+                <form method="POST" action="{% url 'project_info' project.id %}">
+                  {% csrf_token %}
+                  <button class="btn btn-dark">View</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </section>
+    {% if request.user.is_staff %}
+    <div class="text-center mx-auto">
+      <button type="button" class="btn btn-dark fw-bold" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Create a new project
+      </button>
+    </div>
+    <!--pop up form-->
+    <div class="modal fade text-dark" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create a new project</h5>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="{% url 'projects' %}" method="POST">
+              {% csrf_token %}
+              <h4 class="text-center">Create New Project</h4>
+
+              <div class="form-floating mb-3">
+                {{ project_form.name }}
+                <label for="floatingTextarea">Name</label>
+              </div>
+
+              <div class="form-floating mb-3">
+                {{ project_form.description }}
+                <label for="floatingTextarea">Description</label>
+              </div>
+
+              <div class="mb-3">
+                <label for="exampleSelect" class="form-label">Add Team members to project</label>
+                <br>
+                {{ project_form.user }}
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Create project" class="btn btn-dark">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    </div>
+  {% endif %}
+  
+{% endblock %}
