@@ -109,18 +109,18 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Render postgreSQL database
-# import dj_database_url
-
-# DATABASES = {
-#     'default': dj_database_url.parse(env('DATABASE_URL')),
-# }
+import dj_database_url
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3'
-    }
+    'default': dj_database_url.parse(env('DATABASE_URL')),
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3'
+#     }
+# }
 
 DATABASES_TEST = {
     'default': {
