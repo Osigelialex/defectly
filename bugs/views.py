@@ -46,6 +46,6 @@ def bug_info(request, id):
                 form.instance.bug = bug
                 form.save()
 
-        return redirect('bug/bugInfo', bug.id)
+        return redirect('bugInfo', bug.id)
 
     return render(request, 'bug/bug_info.html', context)
