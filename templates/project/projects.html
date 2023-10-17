@@ -71,34 +71,38 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   {% endif %}
-  <section class="mx-auto text-dark">
-    <table class="table table-striped mb-4">
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Description</th>
-          <th scop="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for project in projects %}
+  <section class="mx-auto">
+    <div class="table-responsive">
+      <table class="table mb-4">
+        <thead>
           <tr>
-            <td class="fw-bold">{{ project.name }}</td>
-            <td class="fw-bold">{{ project.description }}</td>
-            <td>
-              {% if user not in project.user.all %}
-                <button class="btn btn-dark" disabled>Not assigned</button>
-              {% else %}
-                <form method="POST" action="{% url 'project_info' project.id %}">
-                  {% csrf_token %}
-                  <button class="btn btn-dark">View</button>
-                </form>
-              {% endif %}
-            </td>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Started</th>
+            <th scop="col"></th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for project in projects %}
+            <tr>
+              <td>{{ project.name }}</td>
+              <td>{{ project.description }}</td>
+              <td>{{ project.start_date }}</td>
+              <td>
+                {% if user not in project.user.all %}
+                  <button class="btn btn-dark" disabled>Not assigned</button>
+                {% else %}
+                  <form method="POST" action="{% url 'project_info' project.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-dark">View</button>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
     </section>
     {% if request.user.is_staff %}
     <div class="text-center mx-auto">

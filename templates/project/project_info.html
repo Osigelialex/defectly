@@ -24,12 +24,12 @@
       </div>
     {% else %}
   
-    <div class="text-center mb-4 text-dark">
+    <div class="text-center text-dark">
       <!--bugs list section-->
       <div class="table-responsive mb-4">
         <h3 class="text-white mb-4">Reported Bugs</h3>
-        <table class="table table-striped table-hover">
-          <thead class="table-dark">
+        <table class="table">
+          <thead>
             <tr>
               <th scope="col">Title</th>
               <th scope="col">Description</th>
@@ -40,9 +40,23 @@
           <tbody>
           {% for bug in bugs %}
             <tr>
-              <td class="fw-bold">{{ bug.title }}</td>
-              <td class="fw-bold">{{ bug.description }}</td>
-              <td class="fw-bold">{{ bug.severity|title }}</td>
+              <td>{{ bug.title|title }}</td>
+              <td>{{ bug.description|title }}</td>
+              <td>
+                {% if bug.severity == 'high' %}
+                  <p class="badge text-bg-danger">
+                    {{ bug.severity|title }}
+                  </p>
+                {% elif bug.severity == 'mid'%}
+                  <p class="badge text-bg-warning">
+                    {{ bug.severity|title }}
+                  </p>
+                {% else %}
+                  <p class="badge text-bg-info">
+                    {{ bug.severity|title }}
+                  </p>
+                {% endif %}
+              </td>
               <td>
                 {% if user in bug.assignees.all %}
                 <form action="{% url 'bugInfo' bug.id %}">
