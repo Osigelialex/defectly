@@ -7,7 +7,7 @@
 {% block body %}
   {% include 'navbar.html' %}
   <div class="container text-center">
-    <h2 class="mb-3 fw-bold">{{ project.name }}</h2>
+    <h2 class="mb-4">{{ project.name }}</h2>
 
     <!--Display if not bugs are found-->
     {% if bugs|length == 0 %}
@@ -24,25 +24,25 @@
       </div>
     {% else %}
   
-    <div class="text-center text-dark">
+    <div class="text-dark">
       <!--bugs list section-->
       <div class="table-responsive mb-4">
-        <h3 class="text-white mb-4">Reported Bugs</h3>
+        <h3 class="mb-4">Reported Bugs</h3>
         <table class="table">
-          <thead>
+          <thead class="table-secondary text-start">
             <tr>
-              <th scope="col">Title</th>
-              <th scope="col">Description</th>
-              <th scope="col">Severity</th>
-              <th scope="col">Details</th>
+              <th scope="col">Bug Name</th>
+              <th scope="col">Date</th>
+              <th scope="col">Priority</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
           {% for bug in bugs %}
             <tr>
-              <td>{{ bug.title|title }}</td>
-              <td>{{ bug.description|title }}</td>
-              <td>
+              <td class="text-start">{{ bug.title|title }}</td>
+              <td class="text-start text-secondary">{{ bug.created_at|timesince }}</td>
+              <td class="text-start">
                 {% if bug.severity == 'high' %}
                   <p class="badge text-bg-danger">
                     {{ bug.severity|title }}
@@ -52,7 +52,7 @@
                     {{ bug.severity|title }}
                   </p>
                 {% else %}
-                  <p class="badge text-bg-info">
+                  <p class="badge text-bg-success">
                     {{ bug.severity|title }}
                   </p>
                 {% endif %}
@@ -78,7 +78,7 @@
         </div>
       </div>
       <!--Team list-->
-      <ul class="list-group w-50 mx-auto">
+      <ul class="col-12 col-lg-7 list-group mx-auto">
         <li class="list-group-item d-flex justify-content-between">
           <h5 class="text-center">Team Members</h5>
           {% if unassigned_devs|length > 0 and user.is_staff %}

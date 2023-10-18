@@ -4,14 +4,14 @@
   {% include 'navbar.html' %}
   <div class="container">
     {% if users|length == 0%}
-      <h1 class="fw-bold text-center">No Team Members Found</h1>
+      <h1 class="text-center">No Team Members Found</h1>
     {% else %}
     <div class="row">
       <div class="col-sm">
         <div class="table-responsive">
           <h3 class="text-center mb-4">View team member details</h3>
-          <table class="table text-center">
-            <thead>
+          <table class="table">
+            <thead class="table-secondary">
               <tr>
                 <th>Username</th>
                 <th>Email</th>

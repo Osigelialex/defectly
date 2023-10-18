@@ -14,20 +14,20 @@
       <div class="table-responsive">
         <h2 class="text-center mb-4">Bugs assigned to you</h2>
         <table class="table mb-4">
-          <thead>
+          <thead class="table-secondary text-start">
             <tr>
-              <th scope="col">Title</th>
-              <th scope="col">Severity</th>
-              <th scope="col">Open</th>
-              <th scope="col">Reported</th>
+              <th scope="col text-start">Title</th>
+              <th scope="col text-start">Priority</th>
+              <th scope="col text-start">Open</th>
+              <th scope="col text-start">Reported</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             {% for bug in bugs %}
               <tr>
-                <td>{{ bug.title}}</td>
-                <td>
+                <td class="text-start">{{ bug.title}}</td>
+                <td class="text-start">
                   {% if bug.severity == 'high' %}
                     <p class="badge text-bg-danger">
                       {{ bug.severity }}
@@ -37,13 +37,13 @@
                       {{ bug.severity }}
                     </p>
                   {% else %}
-                    <p class="badge text-bg-info">
+                    <p class="badge text-bg-success">
                       {{ bug.severity }}
                     </p>
                   {% endif %}
                 </td>
-                <td>{{ bug.open }}</td>
-                <td>{{ bug.created_at|timesince }} ago</td>
+                <td class="text-start">{{ bug.open }}</td>
+                <td class="text-start text-secondary">{{ bug.created_at|timesince }} ago</td>
                 <td>
                   <form action="{% url 'bugInfo' bug.id %}">
                     <button class="btn btn-dark">View</button>
