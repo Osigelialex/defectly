@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh">
-  <form class="col-12 col-lg-6" method="POST" action="{% url 'login' %}">
+  <form class="col-12 col-lg-6" method="POST" action="{% url 'register' %}">
     {% csrf_token %}
     <div class="form-group text-center">
       <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
