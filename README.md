@@ -1,6 +1,6 @@
 # Defectly - Bug Tracking System
 
-![image](https://github.com/Osigelialex/Defectly/assets/97721950/e309af96-b80e-473b-b9a2-e0d3fd6ac6b7)
+![image](https://github.com/Osigelialex/Defectly/assets/97721950/2de3fb5d-b308-4cd0-b3de-af405cfbf5f2)
 
 ## Overview
 
