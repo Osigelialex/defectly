@@ -8,7 +8,7 @@ from .models import Bugs
 @login_required(login_url='login')
 def bugs_view(request):
     bugs = Bugs.objects.filter(assignees=request.user, open=True)
-    return render(request, 'bug/bugs.html', {"bugs": bugs})
+    return render(request, 'bug/bugs.html', {"bugs": bugs, "section": "bugs"})
 
 
 @login_required(login_url='login')
@@ -19,7 +19,8 @@ def bug_info(request, id):
     context = {
         "commentForm": commentForm,
         "bug": bug,
-        "comments": comments
+        "comments": comments,
+        "section": "bugs"
     }
 
     if request.method == 'POST':

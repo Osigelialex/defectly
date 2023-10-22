@@ -18,7 +18,7 @@ def project_view(request):
         context = {"projects": projects, "message": "Created successfully"}
         return render(request, "project/projects.html", context)
 
-    context = {"projects": projects, "project_form": project_form}
+    context = {"projects": projects, "project_form": project_form, "section": "projects"}
     return render(request, 'project/projects.html', context)
 
 
@@ -35,7 +35,8 @@ def project_info_view(request, id):
         "bugs": bugs,
         "bugForm": bugForm,
         "unassigned_devs": unassigned_devs,
-        "assigned_members": assigned_members
+        "assigned_members": assigned_members,
+        "section": "projects"
     }
 
     if request.method == 'POST':

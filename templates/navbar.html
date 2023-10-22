@@ -13,17 +13,41 @@
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard<a>
+          <a 
+            {% if section == 'dashboard' %}
+              class="nav-link active"
+            {% else %}
+              class="nav-link"
+            {% endif %}
+          href="{% url 'dashboard' %}">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'projects' %}">Projects</a>
+          <a 
+            {% if section == 'projects' %}
+              class="nav-link active"
+            {% else %}
+              class="nav-link"
+            {% endif %}
+          href="{% url 'projects' %}">projects</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'bug_view' %}">Bugs</a>
+          <a 
+            {% if section == 'bugs' %}
+              class="nav-link active"
+            {% else %}
+              class="nav-link"
+            {% endif %}
+          href="{% url 'bug_view' %}">Bugs</a>
         </li>
         {% if user.is_superuser %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'administration' %}">Administration</a>
+          <a 
+            {% if section == 'administration' %}
+              class="nav-link active"
+            {% else %}
+              class="nav-link"
+            {% endif %}
+          href="{% url 'administration' %}">Administration</a>
         </li>
         {% endif %}
       </ul>

@@ -29,7 +29,8 @@ def dashboard(request):
     context = {
         "projects_count": projects_count,
         "bugs_count": bugs_count,
-        "resolved_count": resolved_count
+        "resolved_count": resolved_count,
+        "section": "dashboard"
     }
 
     return render(request, "dashboard/dashboard.html", context)
@@ -84,11 +85,13 @@ def administration(request):
             "projects": projects,
             "users": users,
             "is_admin": is_admin,
-            "resolves": resolves
+            "resolves": resolves,
+            "section": "administration"
         })
 
     return render(request, 'admin/administration.html', {
-        "users": users
+        "users": users,
+        "section": "administration"
     })
 
 
